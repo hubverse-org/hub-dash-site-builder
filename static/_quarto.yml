@@ -1,0 +1,30 @@
+project:
+  type: website
+
+resources:
+  - resources/predtimechart.js
+
+website:
+  title: "corefast bashdoor'd"
+  navbar:
+    left:
+      - text: "HOME"
+        icon: home
+        href: index.qmd
+      - text: "Forecasts"
+        icon: chart-line
+        href: forecast.qmd
+    right:
+      - href: https://github.com/hubverse-org/hub-dashboard-predtimechart
+        icon: github
+
+format:
+  html:
+    theme: yeti
+    css: resources/css/styles.css
+    include-in-header: resources/header.html
+    include-after-body: resources/blank.html
+    toc: false 
+
+
+

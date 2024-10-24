@@ -1,0 +1,13 @@
+---
+title: forecast
+include-after-body:
+  text: |
+    <script type="module" src="resources/predtimechart.js"></script>
+---
+
+
+::: {#forecastViz_row .grid .column-screen-inset}
+
+this is replaced
+
+:::
