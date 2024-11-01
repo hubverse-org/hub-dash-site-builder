@@ -34,14 +34,14 @@ yq -i '
   
   # Update the HTML parameters
   # 1. back up the original parameters
-  .bak |= .format.html |
+  .bak = .format.html |
   # 2. attempt to merge the parameters.
   with(.format;
-    . |= . * {"html":$cfg.html} 
+    . |= . * {"html":$cfg.html}
   ) |
   # 3. if the merge failed, restore original
   with(select(.format.html == null);
-    .format.html |= .bak
+    .format.html = .bak
   ) |
   # 4. remove the backup
   del(.bak)
