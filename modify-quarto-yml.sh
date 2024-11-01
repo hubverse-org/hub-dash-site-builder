@@ -44,5 +44,10 @@ yq -i '
     .format.html = .bak
   ) |
   # 4. remove the backup
-  del(.bak)
+  del(.bak) |
+
+  # Allow people to revert to default CSS
+  with(select(.format.html.css == null);
+    .format.html.css = "/dev/null"
+  )
 ' "${YML}"
