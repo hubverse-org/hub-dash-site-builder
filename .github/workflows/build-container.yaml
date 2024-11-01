@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - render.sh
+      - modify-quarto-yml.sh
       - static/**
       - Dockerfile
       - entrypoint.sh
