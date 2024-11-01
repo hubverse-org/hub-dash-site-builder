@@ -11,16 +11,16 @@ yq -i '
   # load the user site config
   load("'"${CFG}"'") as $cfg |
 
-  # Add the pages to the navigation bar
+  # Set the github links of the repo to the org
+  .website.repo-url |= "https://github.com/'"${ORG}/${REPO}"'" |
+
+  # Set the right of the navbar to point to the hub
   with(.website.navbar.right;
     # Update Hub information 
     .[0].href |= "https://github.com/\($cfg.hub)" |
     # Title of the hub will be the repo name (without org)
     .[0].text |= $cfg.hub |
     .[0].text |= split("/")[1] 
-    # Set the URL for the website source
-    # .[1].href |= "https://github.com/'"${ORG}/${REPO}"'"
-    # .[1].text |= "Website" |
   ) |
 
   # Add the pages to the navigation bar
