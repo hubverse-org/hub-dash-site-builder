@@ -30,5 +30,8 @@ yq -i '
   # Update the title
   with(.website.title;
     . |= $cfg.title
-  )
+  ) |
+  with(.format;
+    . |= . * {"html":$cfg.html}
+  ) 
 ' "${YML}"
