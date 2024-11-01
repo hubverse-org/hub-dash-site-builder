@@ -14,7 +14,7 @@ ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/$BRANCH/$DIR"
 echo "📂 Copying site skeleton"
 cp -R /static/* /site/pages/
 # modify the quarto to contain the pages and their ordering
-bash modify-quarto-yml.sh \
+bash /modify-quarto-yml.sh \
   /site/pages/_quarto.yml \
   /site/site-config.yml \
   "${ORG}" "${REPO}"
