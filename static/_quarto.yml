@@ -27,7 +27,8 @@ website:
         href: https://github.com/apps/hubDashboard
 format:
   html:
-    toc: false 
+    lang: en-US
+    toc: false
     theme: yeti
     link-external-icon: true
     anchor-sections: true
