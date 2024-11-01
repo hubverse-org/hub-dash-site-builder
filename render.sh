@@ -14,20 +14,10 @@ ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/$BRANCH/$DIR"
 echo "📂 Copying site skeleton"
 cp -R /static/* /site/pages/
 # modify the quarto to contain the pages and their ordering
-echo "  Updating site config"
-yq -i '
-  # load the user site config
-  load("/site/site-config.yml") as $cfg |
-
-  # Add the pages to the navigation bar
-  with(.website.navbar.left;
-    . += $cfg.pages
-  ) |
-  # Update the title
-  with(.website.title;
-    . |= $cfg.title
-  )
-' /site/pages/_quarto.yml
+bash modify-quarto-yml.sh \
+  /site/pages/_quarto.yml \
+  /site/site-config.yml \
+  "${ORG}" "${REPO}"
 # modify the predtimechart js to get content from the correct place
 sed -i -E "s+\{ROOT\}+$ROOT+" /site/pages/resources/predtimechart.js
 # render the site!

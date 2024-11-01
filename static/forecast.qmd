@@ -1,5 +1,6 @@
 ---
 title: forecast
+repo-actions: false
 include-after-body:
   text: |
     <script type="module" src="resources/predtimechart.js"></script>

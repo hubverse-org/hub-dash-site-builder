@@ -5,26 +5,35 @@ resources:
   - resources/predtimechart.js
 
 website:
-  title: "corefast bashdoor'd"
+  title: "Hubverse Dashboard Template"
+  repo-url: https://github.com/hubverse-org/hub-dashboard-template
+  repo-actions: [edit, source, issue]
+  repo-subdir: pages
   navbar:
     left:
-      - text: "HOME"
-        icon: home
+      - icon: house
         href: index.qmd
       - text: "Forecasts"
-        icon: chart-line
+        icon: graph-up
         href: forecast.qmd
     right:
-      - href: https://github.com/hubverse-org/hub-dashboard-predtimechart
-        icon: github
-
+      - text: "Hub"
+        icon: database
+        href: https://github.com/cdcepi/FluSight-forecast-hub
+  page-footer:
+    right:
+      - icon: gear-fill
+        text: Built with the hubDashboard App
+        href: https://github.com/apps/hubDashboard
 format:
   html:
+    toc: false 
     theme: yeti
+    link-external-icon: true
+    anchor-sections: true
     css: resources/css/styles.css
     include-in-header: resources/header.html
     include-after-body: resources/blank.html
-    toc: false 
 
 
 
