@@ -3,8 +3,8 @@ set -e
 
 YML=${1:-"/site/pages/_quarto.yml"}
 CFG=${2:-"/site/site-config.yml"}
-ORG=${2:-"hubverse-org"}
-REPO=${3:-"hub-dashboard-predtimechart"}
+ORG=${3:-"hubverse-org"}
+REPO=${4:-"hub-dashboard-template"}
 
 echo "  Updating site config"
 yq -i '
