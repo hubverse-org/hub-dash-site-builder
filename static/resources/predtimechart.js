@@ -1,4 +1,4 @@
-import App from 'https://cdn.jsdelivr.net/gh/reichlab/predtimechart@2.0.10/dist/predtimechart.bundle.js';
+import App from 'https://cdn.jsdelivr.net/gh/reichlab/predtimechart@2.0.11/dist/predtimechart.bundle.js';
 document.predtimechart = App;  // for debugging
 
 function replace_chars(the_string) {
@@ -34,10 +34,8 @@ function _fetchData(isForecast, targetKey, taskIDs, referenceDate) {
     const forecast_file_name = `${slug}_${referenceDate}.json`;
     const target_file_name = `${slug}_${tagetDate}.json`;
     if (isForecast) {
-        // target_path = `./static/data/forecasts/${file_name}`;
         target_path = `${root}/forecasts/${forecast_file_name}`;
     } else {
-        // target_path = `./static/data/truth/${file_name}`;
         target_path = `${root}/targets/${target_file_name}`;
     }
     return fetch(target_path);  // Pwomise?
