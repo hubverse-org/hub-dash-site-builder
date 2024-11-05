@@ -1,5 +1,4 @@
 ---
-title: forecast
 repo-actions: false
 include-after-body:
   text: |
