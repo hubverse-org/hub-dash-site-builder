@@ -21,6 +21,9 @@ bash /modify-quarto-yml.sh \
   "${ORG}" \
   "${REPO}" \
   "${FORECASTS}"
+if [[ "${FORECASTS}" == "false" ]]; then
+  echo " Discarding forecasts page"
+fi
 # modify the predtimechart js to get content from the correct place
 sed -i -E "s+\{ROOT\}+$ROOT+" /site/pages/resources/predtimechart.js
 # render the site!
