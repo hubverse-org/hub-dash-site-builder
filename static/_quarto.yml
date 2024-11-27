@@ -27,6 +27,7 @@ website:
         href: https://github.com/apps/hubDashboard
 format:
   html:
+    from: markdown+emoji
     lang: en-US
     toc: false
     theme: yeti
