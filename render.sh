@@ -22,7 +22,7 @@ bash /modify-quarto-yml.sh \
   "${REPO}" \
   "${FORECASTS}"
 if [[ "${FORECASTS}" == "false" ]]; then
-  echo " Discarding forecasts page"
+  echo "  Discarding forecasts page"
   rm /site/pages/forecast.qmd /site/pages/resources/predtimechart.js
 else
   # modify the predtimechart js to get content from the correct place

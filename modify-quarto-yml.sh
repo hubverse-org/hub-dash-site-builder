@@ -7,7 +7,7 @@ ORG=${3:-"hubverse-org"}
 REPO=${4:-"hub-dashboard-template"}
 FORECAST=${5:-"true"}
 
-echo "󰚰  Updating site config"
+echo "  Updating site config"
 yq -i '
   # load the user site config
   load("'"${CFG}"'") as $cfg |
