@@ -5,6 +5,7 @@ ORG=${1:-"hubverse-org"}
 REPO=${2:-"hub-dashboard-predtimechart"}
 BRANCH=${3:-"main"}
 DIR=${4:-""}
+FORECASTS=${5:-"true"}
 if [[ $ORG == "hubverse-org" && $REPO == "hub-dashboard-predtimechart" ]]; then
   DIR="demo/"
 fi
@@ -17,7 +18,9 @@ cp -R /static/* /site/pages/
 bash /modify-quarto-yml.sh \
   /site/pages/_quarto.yml \
   /site/site-config.yml \
-  "${ORG}" "${REPO}"
+  "${ORG}" \
+  "${REPO}" \
+  "${FORECASTS}"
 # modify the predtimechart js to get content from the correct place
 sed -i -E "s+\{ROOT\}+$ROOT+" /site/pages/resources/predtimechart.js
 # render the site!

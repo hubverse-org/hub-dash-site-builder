@@ -5,6 +5,7 @@ YML=${1:-"/site/pages/_quarto.yml"}
 CFG=${2:-"/site/site-config.yml"}
 ORG=${3:-"hubverse-org"}
 REPO=${4:-"hub-dashboard-template"}
+FORECAST=${5:-"true"}
 
 echo "  Updating site config"
 yq -i '
@@ -51,3 +52,8 @@ yq -i '
     .format.html.css = "/dev/null"
   )
 ' "${YML}"
+
+if [[ "${FORECAST}" == "false" ]]; then
+  # remove the forecasts tab
+  yq -i 'del(.website.navbar.left[1]);' "${YML}"
+fi
