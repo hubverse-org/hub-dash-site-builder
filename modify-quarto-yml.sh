@@ -55,5 +55,5 @@ yq -i '
 
 if [[ "${FORECAST}" == "false" ]]; then
   # remove the forecasts tab
-  yq -i 'del(.website.navbar.left[1]);' "${YML}"
+  yq -i 'del(.website.navbar.left[1])' "${YML}"
 fi
