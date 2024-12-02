@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
-ORG=${1:-"hubverse-org"}
-REPO=${2:-"hub-dashboard-predtimechart"}
+ORG=${1:-""}
+REPO=${2:-""}
 BRANCH=${3:-"main"}
 DIR=${4:-""}
 FORECASTS=${5:-"true"}
 if [[ $ORG == "hubverse-org" && $REPO == "hub-dashboard-predtimechart" ]]; then
   DIR="demo/"
+fi
+if [[ -z $ORG && -z $REPO ]]; then
+  # the default will be the repo from the config
+  full=$(yq .hub /site/site-config.yml)
+  ORG=${full%%/*} # bash expansion: delete longest match after '/'
+  REPO=${full#*/} # bash expansion: delete shortest match before '/'
+  REPO=${REPO%/*} # bash expansion: delete shortest match after '/'
 fi
 ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/$BRANCH/$DIR"
 
