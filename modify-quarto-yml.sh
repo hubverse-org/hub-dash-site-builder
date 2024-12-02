@@ -14,6 +14,8 @@ yq -i '
 
   # Set the github links of the repo to the org
   .website.repo-url |= "https://github.com/'"${ORG}/${REPO}"'" |
+  # ensure the resources are copied over
+  .resources += $cfg.resources |
 
   # Set the right of the navbar to point to the hub
   with(.website.navbar.right;
