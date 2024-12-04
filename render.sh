@@ -3,7 +3,7 @@ set -e
 
 ORG=${1:-""}
 REPO=${2:-""}
-BRANCH=${3:-"main"}
+BRANCH=${3:-"ptc/data"}
 DIR=${4:-""}
 FORECASTS=${5:-"true"}
 if [[ $ORG == "hubverse-org" && $REPO == "hub-dashboard-predtimechart" ]]; then
