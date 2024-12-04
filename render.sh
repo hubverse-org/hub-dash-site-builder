@@ -5,7 +5,7 @@ ORG=${1:-""}
 REPO=${2:-""}
 BRANCH=${3:-"ptc/data"}
 DIR=${4:-""}
-FORECASTS=${5:-"true"}
+FORECASTS=${5:-""}
 if [[ $ORG == "hubverse-org" && $REPO == "hub-dashboard-predtimechart" ]]; then
   DIR="demo/"
 fi
@@ -15,6 +15,16 @@ if [[ -z $ORG && -z $REPO ]]; then
   ORG=${full%%/*} # bash expansion: delete longest match after '/'
   REPO=${full#*/} # bash expansion: delete shortest match before '/'
   REPO=${REPO%/*} # bash expansion: delete shortest match after '/'
+fi
+if [[ -z "${FORECASTS}" && -e "predtimechart-config.yml" ]]; then
+  # If the forecasts are not specified, we check for the existence of the
+  # predtimechart-config.yml and set it to TRUE if it does exist
+  FORECASTS="true"
+else
+  # if either of these is not true, then we take the value of forecasts,
+  # but default to false because that means that predtimechart-config
+  # does not exist
+  FORECASTS=${FORECASTS:-"false"}
 fi
 ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/$BRANCH/$DIR"
 
