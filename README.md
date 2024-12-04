@@ -19,10 +19,7 @@ dashboard repository. You need to then copy the contents of `_site/` into the
      --ti \
      -v "/path/to/dashboard/repo":"/site" \
      ghcr.io/hubverse-org/hub-dash-site-builder:main \
-     bash render.sh \
-       ${dashboard repo org} \
-       ${dashboard repo name} \
-       "ptc/data"
+     bash render.sh
    ```
 3. clone the gh-pages branch of the dashboard repository into `pages/`
 4. copy the files from the `dashboard repo/site/pages/_site/` folder into `pages/`
