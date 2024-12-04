@@ -16,7 +16,7 @@ dashboard repository. You need to then copy the contents of `_site/` into the
    $ docker run \
      --platform=linux/amd64 \
      --rm \
-     --ti \
+     -ti \
      -v "/path/to/dashboard/repo":"/site" \
      ghcr.io/hubverse-org/hub-dash-site-builder:main \
      bash render.sh
