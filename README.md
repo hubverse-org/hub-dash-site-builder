@@ -11,17 +11,20 @@ dashboard repository. You need to then copy the contents of `_site/` into the
 
 
 1. clone the dashboard repository
-2. Run the container:
+2. pull the latest container:
    ```bash
-   $ docker run \
-     --platform=linux/amd64 \
-     --rm \
-     -ti \
-     -v "/path/to/dashboard/repo":"/site" \
-     ghcr.io/hubverse-org/hub-dash-site-builder:main \
-     bash render.sh
+   docker pull ghcr.io/hubverse-org/hub-dash-site-builder:main
    ```
-3. clone the gh-pages branch of the dashboard repository into `pages/`
-4. copy the files from the `dashboard repo/site/pages/_site/` folder into `pages/`
-5. push the `pages/` folder up. 
-
+4. Run the container (replace `/path/to/dashboard/repo` with the absolute path to your dashboard. This can be replaced with `$(pwd)` to use the current working directory):
+   ```bash
+   docker run \
+   --platform=linux/amd64 \
+   --rm \
+   -ti \
+   -v "/path/to/dashboard/repo":"/site" \
+   ghcr.io/hubverse-org/hub-dash-site-builder:main \
+   bash render.sh
+   ```
+5. clone the gh-pages branch of the dashboard repository into `pages/`
+6. copy the files from the `dashboard repo/site/pages/_site/` folder into `pages/`
+7. push the `pages/` folder up. 
