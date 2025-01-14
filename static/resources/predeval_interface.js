@@ -9,7 +9,7 @@ function replace_chars(the_string) {
     return the_string.replace(/[^a-zA-Z0-9-_]/g, '-');
 }
 
-const root = "https://raw.githubusercontent.com/elray1/flusight-dashboard/refs/heads/predeval/data/";
+const root = "{ROOT}";
 
 async function _fetchData(target, eval_window, disaggregate_by) {
     // ex taskIDs: {"scenario_id": "A-2022-05-09", "location": "US"} . NB: key order not sorted
