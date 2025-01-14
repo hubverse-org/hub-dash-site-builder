@@ -6,6 +6,7 @@ CFG=${2:-"/site/site-config.yml"}
 ORG=${3:-"hubverse-org"}
 REPO=${4:-"hub-dashboard-template"}
 FORECAST=${5:-"true"}
+EVAL=${6:-"true"}
 
 echo "  Updating site config"
 yq -i '
@@ -57,5 +58,9 @@ yq -i '
 
 if [[ "${FORECAST}" == "false" ]]; then
   # remove the forecasts tab
-  yq -i 'del(.website.navbar.left[1])' "${YML}"
+  yq -i 'with(.website.navbar.left; . |= filter(.href != "forecast.qmd"))' "${YML}"
+fi
+if [[ "${EVAL}" == "false" ]]; then
+  # remove the forecasts tab
+  yq -i 'with(.website.navbar.left; . |= filter(.href != "eval.qmd"))' "${YML}"
 fi
