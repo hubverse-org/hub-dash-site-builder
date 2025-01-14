@@ -45,19 +45,20 @@ bash /modify-quarto-yml.sh \
   "${FORECASTS}" \
   "${EVALS}"
 if [[ "${FORECASTS}" == "false" ]]; then
-  FORECAST_ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/$BRANCH/$DIR"
   echo "  Discarding forecasts page"
   rm /site/pages/forecast.qmd /site/pages/resources/predtimechart.js
 else
+  FORECAST_ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/$BRANCH/$DIR"
   # modify the predtimechart js to get content from the correct place
   sed -i -E "s+\{ROOT\}+${FORECAST_ROOT}+" /site/pages/resources/predtimechart.js
 fi
 if [[ "${EVALS}" == "false" ]]; then
-  EVAL_BRANCH="predeval/data"
-  EVAL_ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/${EVAL_BRANCH}/$DIR"
   echo "  Discarding (experimental) evals page"
   rm /site/pages/eval.qmd /site/pages/resources/predeval_interface.js
 else
+  # TODO: change this when we publish
+  EVAL_BRANCH="predeval/data"
+  EVAL_ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/${EVAL_BRANCH}/$DIR"
   # modify the predtimechart js to get content from the correct place
   sed -i -E "s+\{ROOT\}+${EVAL_ROOT}+" /site/pages/resources/predeval_interface.js
 fi
