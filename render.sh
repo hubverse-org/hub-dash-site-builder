@@ -17,7 +17,7 @@ if [[ -z $ORG && -z $REPO ]]; then
   REPO=${full#*/} # bash expansion: delete shortest match before '/'
   REPO=${REPO%/*} # bash expansion: delete shortest match after '/'
 fi
-if [[ -z "${FORECASTS}" && -e "predtimechart-config.yml" ]]; then
+if [[ -z "${FORECASTS}" && -e "/site/predtimechart-config.yml" ]]; then
   # If the forecasts are not specified, we check for the existence of the
   # predtimechart-config.yml and set it to TRUE if it does exist
   FORECASTS="true"
@@ -27,7 +27,7 @@ else
   # does not exist
   FORECASTS=${FORECASTS:-"false"}
 fi
-if [[ - "${EVALS}" && -e "predeval-config.yml" ]]; then
+if [[ -z "${EVALS}" && -e "/site/predeval-config.yml" ]]; then
   EVALS="true"
 else
   EVALS=${EVALS:-"false"}
