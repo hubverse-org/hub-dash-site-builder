@@ -15,8 +15,6 @@ async function _fetchData(target, eval_window, disaggregate_by) {
     // ex taskIDs: {"scenario_id": "A-2022-05-09", "location": "US"} . NB: key order not sorted
     console.info("_fetchData(): entered.", `"${target}"`, `"${eval_window}"`, `"${disaggregate_by}"`);
 
-    // const targetKeyStr = replace_chars(targetKey);
-
     let target_path;
     if (disaggregate_by === '(None)') {
       target_path = `${root}scores/${target}/${eval_window}/scores.csv`;
@@ -24,9 +22,6 @@ async function _fetchData(target, eval_window, disaggregate_by) {
       target_path = `${root}scores/${target}/${eval_window}/${disaggregate_by}/scores.csv`;
     }
     return d3.csv(target_path);
-    // return fetch(target_path)
-    //     .then(response => response.text())
-    //     .then(data => parse(data));
 }
 
 
@@ -36,7 +31,7 @@ fetch(`${root}/predeval-options.json`)
     .then((data) => {
         console.info("fetch(): done. calling App.initialize().", data);
 
-        // componentDiv, _fetchData, isIndicateRedraw, options, _calcUemForecasts:
+        // componentDiv, _fetchData, options:
         App.initialize('predEval_row', _fetchData, data);
     })
     .then(function() {
