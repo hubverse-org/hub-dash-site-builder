@@ -2,7 +2,7 @@
 repo-actions: false
 include-after-body:
   text: |
-    <script type="module" src="includes/predeval_interface.js"></script>
+    <script type="module" src="resources/predeval_interface.js"></script>
 ---
 
 
