@@ -58,9 +58,9 @@ yq -i '
 
 if [[ "${FORECAST}" == "false" ]]; then
   # remove the forecasts tab
-  yq -i 'with(.website.navbar.left; . |= filter(.href != "forecast.qmd")' "${YML}"
+  yq -i 'with(.website.navbar.left; . |= filter(.href != "forecast.qmd"))' "${YML}"
 fi
 if [[ "${EVAL}" == "false" ]]; then
   # remove the forecasts tab
-  yq -i 'with(.website.navbar.left; . |= filter(.href != "eval.qmd")' "${YML}"
+  yq -i 'with(.website.navbar.left; . |= filter(.href != "eval.qmd"))' "${YML}"
 fi
