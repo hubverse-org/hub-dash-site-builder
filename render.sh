@@ -6,6 +6,7 @@ REPO=${2:-""}
 BRANCH=${3:-"ptc/data"}
 DIR=${4:-""}
 FORECASTS=${5:-""}
+EVALS=${6:-""}
 if [[ $ORG == "hubverse-org" && $REPO == "hub-dashboard-predtimechart" ]]; then
   DIR="demo/"
 fi
@@ -26,7 +27,11 @@ else
   # does not exist
   FORECASTS=${FORECASTS:-"false"}
 fi
-ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/$BRANCH/$DIR"
+if [[ - "${EVALS}" && -e "predeval-config.yml" ]]; then
+  EVALS="true"
+else
+  EVALS=${EVALS:-"false"}
+fi
 
 # copy resources to the user's site
 echo "📂 Copying site skeleton"
@@ -37,13 +42,24 @@ bash /modify-quarto-yml.sh \
   /site/site-config.yml \
   "${ORG}" \
   "${REPO}" \
-  "${FORECASTS}"
+  "${FORECASTS}" \
+  "${EVALS}"
 if [[ "${FORECASTS}" == "false" ]]; then
+  FORECAST_ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/$BRANCH/$DIR"
   echo "  Discarding forecasts page"
   rm /site/pages/forecast.qmd /site/pages/resources/predtimechart.js
 else
   # modify the predtimechart js to get content from the correct place
-  sed -i -E "s+\{ROOT\}+$ROOT+" /site/pages/resources/predtimechart.js
+  sed -i -E "s+\{ROOT\}+${FORECAST_ROOT}+" /site/pages/resources/predtimechart.js
+fi
+if [[ "${EVALS}" == "false" ]]; then
+  EVAL_BRANCH="predeval/data"
+  EVAL_ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/${EVAL_BRANCH}/$DIR"
+  echo "  Discarding (experimental) evals page"
+  rm /site/pages/eval.qmd /site/pages/resources/predeval_interface.js
+else
+  # modify the predtimechart js to get content from the correct place
+  sed -i -E "s+\{ROOT\}+${EVAL_ROOT}+" /site/pages/resources/predeval_interface.js
 fi
 # render the site!
 echo "🏗  Building the site"

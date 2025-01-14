@@ -1,0 +1,13 @@
+---
+repo-actions: false
+include-after-body:
+  text: |
+    <script type="module" src="includes/predeval_interface.js"></script>
+---
+
+
+::: {#predEval_row .grid .column-screen-inset}
+
+this is replaced
+
+:::

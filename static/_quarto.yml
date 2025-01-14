@@ -16,6 +16,9 @@ website:
       - text: "Forecasts"
         icon: graph-up
         href: forecast.qmd
+      - text: "Evaluation"
+        icon: table
+        href: eval.qmd
     right:
       - text: "Hub"
         icon: database
