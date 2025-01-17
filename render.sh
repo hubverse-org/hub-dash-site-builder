@@ -27,7 +27,7 @@ else
   # does not exist
   FORECASTS=${FORECASTS:-"false"}
 fi
-if [[ -z "${EVALS}" && -e "/site/predeval-config.yml" ]]; then
+if [[ -z "${EVALS}" && -e "/site/predevals-config.yml" ]]; then
   EVALS="true"
 else
   EVALS=${EVALS:-"false"}
@@ -54,13 +54,13 @@ else
 fi
 if [[ "${EVALS}" == "false" ]]; then
   echo "  Discarding (experimental) evals page"
-  rm /site/pages/eval.qmd /site/pages/resources/predeval_interface.js
+  rm /site/pages/eval.qmd /site/pages/resources/predevals_interface.js
 else
   # TODO: change this when we publish
-  EVAL_BRANCH="predeval/data"
+  EVAL_BRANCH="predevals/data"
   EVAL_ROOT="https://raw.githubusercontent.com/$ORG/$REPO/refs/heads/${EVAL_BRANCH}/$DIR"
   # modify the predtimechart js to get content from the correct place
-  sed -i -E "s+\{ROOT\}+${EVAL_ROOT}+" /site/pages/resources/predeval_interface.js
+  sed -i -E "s+\{ROOT\}+${EVAL_ROOT}+" /site/pages/resources/predevals_interface.js
 fi
 # render the site!
 echo "🏗  Building the site"
