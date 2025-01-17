@@ -3,7 +3,7 @@ project:
 
 resources:
   - resources/predtimechart.js
-  - resources/predeval_interface.js
+  - resources/predevals_interface.js
 
 website:
   title: "Hubverse Dashboard Template"
