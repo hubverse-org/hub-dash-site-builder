@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+echo "mwahahaha"
+
 ORG=${1:-""}
 REPO=${2:-""}
 BRANCH=${3:-"ptc/data"}
