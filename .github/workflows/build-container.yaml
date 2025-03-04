@@ -25,9 +25,9 @@ jobs:
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
       contents: read
-      packages: ${{ github.event_name == "release" && write || none }}
-      attestations: ${{ github.event_name == "release" && write || none }}
-      id-token: ${{ github.event_name == "release" && write || none }}
+      packages: write
+      attestations: write
+      id-token: write
       # 
     steps:
       - name: Checkout repository
