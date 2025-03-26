@@ -4,7 +4,7 @@ set -e
 PTC=""
 PREDEVALS=""
 
-render_help () {
+usage () {
   echo "Render a dashboard website"
   echo
   echo "USAGE"
@@ -82,19 +82,22 @@ while getopts "o:r:p:e:s:h" opt; do
       OUT="$OPTARG"
     ;;
     h)
-      render_help
+      usage
       exit 0
     ;;
   esac
 done
 
+# Print the help if no arguments are given
+if [ $OPTIND -eq 1 ]; then usage; exit 0; fi
+
 if [[ (-z $ORG || -z $REPO) && (-z $PTC || -z $PREDEVALS) ]]; then
-  render_help
+  usage
   echo
   echo "ERROR: The correct pair of arguments are REQUIRED"
   echo
   echo "FOR REMOTE DATA"
-  echo "  -o (owner) and -r (repo)"
+  echo "  -u (user) and -r (repo)"
   echo "  This provides information to construct a raw GitHub URL"
   echo "  (used for public data)"
   echo
