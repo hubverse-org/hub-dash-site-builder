@@ -64,7 +64,7 @@ usage () {
   echo '  ```'
 }
 
-while getopts "o:r:p:e:s:h" opt; do
+while getopts "u:r:p:e:o:h" opt; do
   case $opt in
     u)
       ORG="$OPTARG";
@@ -126,16 +126,16 @@ fi
 
 # Work in a temporary directory to not bork the users workspace
 tmp="$(mktemp -d)"
-cp -R $PWD/pages/* "$tmp"
+cp -R $PWD/pages/* $tmp
 
 # copy resources to the user's site
 echo "📂 Copying site skeleton"
-cp -R /static/* "$tmp"
+cp -R /static/* $tmp
 
 # modify the quarto to contain the pages and their ordering
 modify-quarto-yml.sh \
   "${tmp}/_quarto.yml" \
-  "$PWD$PWD-config.yml" \
+  "$PWD/site-config.yml" \
   "${ORG}" \
   "${REPO}" \
   "${FORECASTS}" \
