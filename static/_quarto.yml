@@ -26,7 +26,7 @@ website:
         href: https://github.com/cdcepi/FluSight-forecast-hub
   page-footer:
     right:
-      - text: "Built with the hubverse dashboard"
+      - text: "Built with the Hubverse dashboard"
         href: https://hubverse.io/en/latest/user-guide/dashboards.html
 format:
   html:
