@@ -20,8 +20,9 @@ RUN useradd -s /bin/bash -m docker \
 RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64.tar.gz -O - |\
   tar xz && mv yq_linux_amd64 /usr/bin/yq 
 
+WORKDIR /static
 COPY static /static
 COPY render.sh /usr/local/bin/render.sh
 COPY modify-quarto-yml.sh /usr/local/bin/modify-quarto-yml.sh
 RUN chmod u+x /usr/local/bin/render.sh /usr/local/bin/modify-quarto-yml.sh
-CMD ["bash"]
+CMD ["render.sh"]
