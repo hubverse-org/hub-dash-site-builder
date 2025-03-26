@@ -23,6 +23,7 @@ RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linu
 WORKDIR /site
 COPY static /static
 COPY render.sh /usr/local/bin/render.sh
+COPY examples.md /usr/include/
 COPY modify-quarto-yml.sh /usr/local/bin/modify-quarto-yml.sh
 RUN chmod u+x /usr/local/bin/render.sh /usr/local/bin/modify-quarto-yml.sh
 CMD ["render.sh"]

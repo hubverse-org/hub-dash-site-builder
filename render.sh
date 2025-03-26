@@ -27,41 +27,7 @@ usage () {
   echo
   echo 'EXAMPLES'
   echo
-  echo '  The examples below will demonstrate how to build a website locally using'
-  echo '  both remote and local data. We will use the flusight dashboard website'
-  echo '  repository for this example. In both examples, the site will appear'
-  echo '  in the pages/_site/ folder'
-  echo
-  echo '  ```'
-  echo '  # setup: clone the dashboard repository'
-  echo '  git clone https://github.com/reichlab/flusight-dashboard.git'
-  echo '  cd flusight-dashboard'
-  echo '  ```'
-  echo
-  echo '  Specify owner and repo to generate a website that pulls data from GitHub'
-  echo '  ```'
-  echo '  docker run --rm -it -v "$(pwd)":"/site" \'
-  echo '  render.sh -u reichlab -r flusight-dashboard -o remote'
-  echo '  # serve the site (and view in your browser by going to localhost:8080)'
-  echo '  python -m http.server 8080 -d remote'
-  echo '  ```'
-  echo
-  echo '  Specify local data folders to generate a standalone website that can be'
-  echo '  be used offline.'
-  echo
-  echo '  ```'
-  echo '  # additional setup: add worktrees for the data branches'
-  echo '  mkdir -p data'
-  echo '  git worktree add data/ptc ptc/data'
-  echo '  git worktree add data/evals predevals/data'
-  echo '  ```'
-  echo
-  echo '  ```'
-  echo '  docker run --rm -it -v "$(pwd)":"/site" \'
-  echo '  render.sh -p data/ptc -e data/evals -o local'
-  echo '  # serve the site (and view in your browser by going to localhost:8080)'
-  echo '  python -m http.server 8080 -d local'
-  echo '  ```'
+  cat /usr/include/examples.md | sed -e 's/^/  /'
 }
 
 while getopts "u:r:p:e:o:h" opt; do
