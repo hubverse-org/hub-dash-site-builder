@@ -21,6 +21,7 @@ RUN wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linu
   tar xz && mv yq_linux_amd64 /usr/bin/yq 
 
 COPY static /static
-COPY render.sh render.sh
-COPY modify-quarto-yml.sh modify-quarto-yml.sh
+COPY render.sh /usr/local/bin/render.sh
+COPY modify-quarto-yml.sh /usr/local/bin/modify-quarto-yml.sh
+RUN chmod u+x /usr/local/bin/render.sh /usr/local/bin/modify-quarto-yml.sh
 CMD ["bash"]
