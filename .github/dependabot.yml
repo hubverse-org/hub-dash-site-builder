@@ -8,7 +8,7 @@ updates:
       interval: "weekly"
     # group all run-of-the mill updates into a single pull request
     groups:
-      gha-updates:
+      updates:
         applies-to: version-updates
         update-types:
           - patch
