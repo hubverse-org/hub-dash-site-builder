@@ -9,16 +9,15 @@ on:
 permissions: read-all
 
 jobs:
-  id: check
-  permissions: read-all
-  runs-on: ubuntu-latest
-  if: ${{ github.event.workflow_run.conclusion == 'success' }}
-  steps:
-    - id: check-artifacts
-      uses: actions/download-artifact@v4
-      with:
-        run-id: ${{ github.event.workflow_run.id }}
-        path: artifacts
-        
-    - id: list-artifacts
-      run: ls -larth artifacts
+  check:
+    permissions: read-all
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - id: check-artifacts
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ github.event.workflow_run.id }}
+          path: artifacts
+      - id: list-artifacts
+        run: ls -larth artifacts
