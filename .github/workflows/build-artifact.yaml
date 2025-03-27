@@ -53,12 +53,15 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - id: name-artifact
         env:
+          REPO: ${{ github.repository }}
           RELEASE: ${{ github.event_name == 'release' }}
+          TAG: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
         run: |
           if [ -z "$RELEASE" ]; then
             echo "name=release" >> "$GITHUB_OUTPUT"
           else
-            echo "name=test" >> "$GITHUB_OUTPUT"
+            tag=sed -e "s+.*\:++" <<< $TAG
+            echo "name=tag-$TAG" >> "$GITHUB_OUTPUT"
           fi
 
       - id: build
@@ -73,5 +76,6 @@ jobs:
         name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 1
           name: ${{ steps.name-artifact.outputs.name }}
           path: /tmp/hub-dash-site-deployer.tar
