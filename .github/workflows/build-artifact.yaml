@@ -100,6 +100,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+          pattern: tag*|release
       - id: list-artifacts
         run: ls -larth artifacts
       - id: load-image
