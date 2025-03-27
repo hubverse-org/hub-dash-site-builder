@@ -51,7 +51,7 @@ jobs:
           context: .
           file: ./Dockerfile
           tags: ${{ steps.meta.outputs.tags || env.TAG }}
-          outputs: type=oci,dest=/tmp/image.tar
+          outputs: type=docker,dest=/tmp/image.tar
       - id: upload
         name: Upload artifact
         uses: actions/upload-artifact@v4
