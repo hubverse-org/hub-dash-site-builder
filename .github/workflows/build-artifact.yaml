@@ -60,8 +60,8 @@ jobs:
           if [ -z "$RELEASE" ]; then
             echo "name=release" >> "$GITHUB_OUTPUT"
           else
-            tag=sed -e "s+.*\:++" <<< $TAG
-            echo "name=tag-$TAG" >> "$GITHUB_OUTPUT"
+            tag=$(echo $TAG | sed -e "s+.*\:++")
+            echo "name=tag-$tag" >> "$GITHUB_OUTPUT"
           fi
         shell: bash {0}
 
