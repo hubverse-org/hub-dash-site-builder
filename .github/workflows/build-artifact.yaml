@@ -83,6 +83,7 @@ jobs:
           path: /tmp/hub-dash-site-deployer.tar
 
   upload-to-registry:
+    needs: [build-image]
     name: "Upload Release to Registry"
     runs-on: ubuntu-latest
     # if: ${{ github.event_name == 'release' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
