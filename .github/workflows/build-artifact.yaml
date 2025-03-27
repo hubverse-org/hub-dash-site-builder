@@ -38,7 +38,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        if: ${{ github.event_name == "push" }}
+        if: ${{ github.event_name == 'push' }}
         name: Extract metadata (tags, labels) for Docker
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 #v5.7.0
         with:
