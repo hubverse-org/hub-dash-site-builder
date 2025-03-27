@@ -75,18 +75,16 @@ if [[ (-z $ORG || -z $REPO) && (-z $PTC || -z $PREDEVALS) ]]; then
   exit 1
 fi
 
-ls -larth $PWD
-
 # Do we need to build forecasts or evals? This is determined by the presence
 # of the configuration files. If they _are_ present, we preferentially take
 # the values of the PTC and PREDEVALS values (which correspond to the
 # predtimechart and predevals data, respectively)
-if [ -e "$PWD/predtimechart-config.yml" ]; then
+if head -n 1 "$PWD/predtimechart-config.yml" 2>&1 > /dev/null ; then
   FORECASTS="${PTC:-true}"
 else
   FORECASTS=""
 fi
-if [ -e "$PWD/predevals-config.yml" ]; then
+if head -n 1 "$PWD/predevals-config.yml" 2>&1 > /dev/null ; then
   EVALS="${PREDEVALS:-true}"
 else
   EVALS=""
