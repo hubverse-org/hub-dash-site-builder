@@ -63,6 +63,7 @@ jobs:
             tag=sed -e "s+.*\:++" <<< $TAG
             echo "name=tag-$TAG" >> "$GITHUB_OUTPUT"
           fi
+        language: bash {0}
 
       - id: build
         name: Build and export
