@@ -73,3 +73,17 @@ render.sh
 -e <relative-path-to-predevals-data>
 -o out
 ```
+
+## Testing
+
+This docker container can be tested with the [`tests/run.sh`](tests/run.sh) script and
+the flusight hub. These tests will clone a hub dashboard to a temporary file and
+run tests on it. 
+
+
+```sh
+# Step 1 build the container
+docker build --platform=linux/amd64 -t hdsb .
+# Step 2 run the tests against an _active_ hub dashboard
+bash tests/run.sh hdsb reichlab/flusight-dashboard
+```
