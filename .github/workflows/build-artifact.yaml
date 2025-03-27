@@ -60,7 +60,7 @@ jobs:
           TAG: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
         run: |
           if [ -z "$RELEASE" ]; then
-            echo "name=release" >> "$GITHUB_OUTPUT"
+            echo "name=tag-release" >> "$GITHUB_OUTPUT"
           else
             tag=$(echo $TAG | sed -e "s+.*\:++")
             echo "name=tag-$tag" >> "$GITHUB_OUTPUT"
@@ -100,7 +100,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-          pattern: tag*|release
+          pattern: tag*
       - id: list-artifacts
         run: ls -larth artifacts
       - id: load-image
