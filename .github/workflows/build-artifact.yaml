@@ -2,6 +2,8 @@ name: Create image and save as artifact
 
 # Configures this workflow to run every time a change is pushed to the branch called `release`.
 on:
+  release:
+    types: [published]
   pull_request:
     branches: [main]
   push:
@@ -13,6 +15,11 @@ on:
       - Dockerfile
       - entrypoint.sh
   workflow_dispatch:
+    inputs:
+      tag:
+        required: false
+        type: string
+        default: ghcr.io/hubverse-org/hub-dash-site-deployer:test
 
 permissions: read-all
 env:
@@ -31,7 +38,7 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 #v3.10.0 
       - id: container-login
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
         name: Log in to the Container registry
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 #v3.4.0
         with:
@@ -39,22 +46,32 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'push' || github.event_name == 'release' }}
         name: Extract metadata (tags, labels) for Docker
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 #v5.7.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - id: name-artifact
+        env:
+          RELEASE: ${{ github.event_name == 'release' }}
+        run: |
+          if [ -z "$RELEASE" ]; then
+            echo "name=release" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=test" >> "$GITHUB_OUTPUT"
+          fi
+
       - id: build
         name: Build and export
         uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 #v6.15.0
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ steps.meta.outputs.tags || env.TAG }}
-          outputs: type=docker,dest=/tmp/image.tar
+          tags: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
+          outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
       - id: upload
         name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app
-          path: /tmp/image.tar
+          name: ${{ steps.name-artifact.outputs.name }}
+          path: /tmp/hub-dash-site-deployer.tar
