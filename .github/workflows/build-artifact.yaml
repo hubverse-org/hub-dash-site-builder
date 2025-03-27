@@ -18,6 +18,7 @@ permissions: read-all
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  TAG: ghcr.io/${{ github.repository }}:pr-${{ github.event.pull_request.number }}
 
 jobs:
   upload-artifact:
@@ -49,7 +50,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: name/app:latest
+          tags: ${{ steps.meta.outputs.tags || env.TAG }}
           outputs: type=oci,dest=/tmp/image.tar
       - id: upload
         name: Upload artifact
