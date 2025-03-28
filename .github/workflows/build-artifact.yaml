@@ -82,20 +82,17 @@ jobs:
           name: ${{ steps.name-artifact.outputs.name }}
           path: /tmp/hub-dash-site-deployer.tar
 
-  upload-to-registry:
+  test:
     needs: [build-image]
-    name: "Upload Release to Registry"
+    name: "test built image"
     runs-on: ubuntu-latest
     # if: ${{ github.event_name == 'release' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
+    permissions: read-all
+      # contents: read
+      # packages: write
+      # attestations: write
+      # id-token: write
     steps:
-      - id: setup-buildx
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 #v3.10.0 
       - id: check-artifacts
         uses: actions/download-artifact@v4
         with:
@@ -105,10 +102,13 @@ jobs:
         run: ls -larth artifacts
       - id: load-image
         run: |
-          tag=$(ls artifacts/tag*/*)
+          tag=$(ls artifacts/)
+          path=$(ls artifacts/$tag/*)
           echo $tag
-          docker load --input "$tag"
-          docker image ls -a
+          docker load --input "$path"
+          tests=$(mktemp)
+          curl -o $tests https://raw.githubusercontent.com/hubverse-org/hub-dash-site-builder/refs/heads/main/tests/run.sh
+          bash ${tests} "ghcr.io/hubverse-org/hub-dash-site-builder:${tag}" reichlab/flusight-dashboard || echo tests failed
         shell: bash
 
 
