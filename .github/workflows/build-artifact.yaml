@@ -105,7 +105,7 @@ jobs:
         run: ls -larth artifacts
       - id: load-image
         run: |
-          tag=$(ls artifacts/tag*)
+          tag=$(ls artifacts/tag*/*)
           echo $tag
           docker load --input "artifacts/$tag"
           docker image ls -a
