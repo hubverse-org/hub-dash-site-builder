@@ -76,8 +76,9 @@ jobs:
           outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
       - id: test
         run: |
+          tag=${TAG/*:/}
           docker load --input /tmp/hub-dash-site-deployer.tar
-          bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${TAG}" reichlab/flusight-dashboard || echo tests failed
+          bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${tag}" reichlab/flusight-dashboard || echo tests failed
 
       - id: upload
         name: Upload artifact
