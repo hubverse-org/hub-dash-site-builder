@@ -30,8 +30,6 @@ jobs:
   build-image:
     permissions: read-all
     runs-on: ubuntu-latest
-    outputs:
-      release: ${{ github.event_name == 'release' }}
     steps:
       - id: checkout
         name: Checkout
@@ -76,10 +74,11 @@ jobs:
           outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
       - id: test
         run: |
+          echo "Token Permissions"
+          echo $(curl -sS -f -I -H "Authorization: token $GITHUB_TOKEN" https://api.github.com )
           tag=${TAG/*:/}
           docker load --input /tmp/hub-dash-site-deployer.tar
-          bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${tag}" reichlab/flusight-dashboard || echo tests failed
-
+          bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${tag}" reichlab/flusight-dashboard
       - id: upload
         name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -90,7 +89,7 @@ jobs:
 
   test:
     needs: [build-image]
-    name: "test built image"
+    name: "Test built image against published test suite (may fail)"
     runs-on: ubuntu-latest
     # if: ${{ github.event_name == 'release' || github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
     permissions: read-all

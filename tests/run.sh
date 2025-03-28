@@ -113,4 +113,4 @@ chk="    forecast page is gone"
 chk="    eval page is gone"
 [[ ! -f "${TMP}/novis/eval.html" ]] && echo "$chk | $ok" || echo "$chk | $no"
 
-rm -rf "${TMP}"
+rm -rf "${TMP}" 2>&1 > /dev/null
