@@ -96,7 +96,7 @@ jobs:
 
   test:
     needs: [build-image]
-    if: ${{ github.event_name == "pull_request" }}
+    if: ${{ github.event_name == 'pull_request' }}
     name: "Test built image against published test suite (may fail)"
     runs-on: ubuntu-latest
     permissions: read-all
