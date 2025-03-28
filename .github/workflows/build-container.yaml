@@ -109,7 +109,6 @@ jobs:
           pattern: tag*
       - id: test-image
         name: Test image against tests on main
-        bash 
         run: |
           tag=$(ls artifacts/)
           path=$(ls artifacts/$tag/*)
