@@ -74,6 +74,11 @@ jobs:
           file: ./Dockerfile
           tags: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
           outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
+      - id: test
+        run: |
+          docker load --input /tmp/hub-dash-site-deployer.tar
+          bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${TAG}" reichlab/flusight-dashboard || echo tests failed
+
       - id: upload
         name: Upload artifact
         uses: actions/upload-artifact@v4
