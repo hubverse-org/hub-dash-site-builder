@@ -107,7 +107,7 @@ jobs:
         run: |
           tag=$(ls artifacts/tag*/*)
           echo $tag
-          docker load --input "artifacts/$tag"
+          docker load --input "$tag"
           docker image ls -a
         shell: bash
 
