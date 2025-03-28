@@ -1,4 +1,4 @@
-name: Create image and save as artifact
+name: Create, Test, and Publish Docker Image
 
 # Configures this workflow to run every time a change is pushed to the branch called `release`.
 on:
@@ -28,7 +28,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  TAG: ghcr.io/${{ github.repository }}:${{ github.event_name == 'pull_request' && format('pr-{0}', fromJSON(github.event.pull_request.number)) || 'latest' }}
+  TAG: ghcr.io/${{ github.repository }}:${{ github.event_name == 'pull_request' && format('pr-{0}', fromJSON(github.event.pull_request.number)) || (inputs.tag || 'latest') }}
   PUBLISH: ${{ github.event_name == 'release' || (github.event.workflow_dispatch.ref == '/refs/head/main' && inputs.publish) }}
 
 jobs:
@@ -81,7 +81,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
           outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
       - id: test
-        name: "Test"
+        name: Test image
         run: |
           tag=${TAG/*:/}
           docker load --input /tmp/hub-dash-site-deployer.tar
@@ -102,17 +102,17 @@ jobs:
     permissions: read-all
     steps:
       - id: check-artifacts
+        name: Fetch image
         uses: actions/download-artifact@v4
         with:
           path: artifacts
           pattern: tag*
-      - id: list-artifacts
-        run: ls -larth artifacts
-      - id: load-image
+      - id: test-image
+        name: Test image against tests on main
+        bash 
         run: |
           tag=$(ls artifacts/)
           path=$(ls artifacts/$tag/*)
-          echo $tag
           docker load --input "$path"
           tests=$(mktemp)
           curl -o $tests https://raw.githubusercontent.com/hubverse-org/hub-dash-site-builder/refs/heads/main/tests/run.sh
@@ -122,7 +122,7 @@ jobs:
     needs: [build-image]
     name: "Publish Image"
     runs-on: ubuntu-latest
-    # if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ github.event_name != 'pull_request' }}
     permissions:
       contents: read
       packages: write
@@ -130,6 +130,7 @@ jobs:
       id-token: write
     steps:
       - id: check-artifacts
+        name: Fetch Image
         uses: actions/download-artifact@v4
         with:
           path: artifacts
