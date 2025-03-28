@@ -28,7 +28,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  TAG: ghcr.io/${{ github.repository }}:${{ github.event_name == 'pull_request' && format('pr-{0}', fromJSON(github.event.pull_request.number) || 'test' }}
+  TAG: ghcr.io/${{ github.repository }}:${{ github.event_name == 'pull_request' && format('pr-{0}', fromJSON(github.event.pull_request.number)) || 'test' }}
   PUBLISH: ${{ github.event_name == 'push' || github.event_name == 'release' || (github.event.workflow_dispatch.ref == '/refs/head/main' && inputs.publish) }}
 
 jobs:
