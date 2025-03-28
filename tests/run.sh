@@ -15,7 +15,7 @@ if running_in_docker; then
 else
   TMP=$(mktemp -d)
   git clone "https://github.com/${DASH}.git" ${TMP}
-  PREAMBLE="docker run --rm -it --platform=linux/amd64 -v \"${TMP}\":\"/site\" ${IMG} render.sh"
+  PREAMBLE="docker run --rm --platform=linux/amd64 -v \"${TMP}\":\"/site\" ${IMG} render.sh"
 fi
 
 ok="✅"
