@@ -74,8 +74,6 @@ jobs:
           outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
       - id: test
         run: |
-          echo "Token Permissions"
-          echo $(curl -sS -f -I -H "Authorization: token $GITHUB_TOKEN" https://api.github.com )
           tag=${TAG/*:/}
           docker load --input /tmp/hub-dash-site-deployer.tar
           bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${tag}" reichlab/flusight-dashboard
