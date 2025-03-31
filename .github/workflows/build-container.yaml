@@ -111,9 +111,11 @@ jobs:
           pattern: tag*
       - id: test-image
         name: Test image against tests on main
+        env:
+          TAG: ${{ needs.build-image.outputs.tags }}
         run: |
-          tag=$(ls artifacts/)
-          path=$(ls artifacts/$tag/*)
+          path=$(ls artifacts/*/*)
+          tag="${TAG/*:/}"
           docker load --input "$path"
           tests=$(mktemp)
           curl -o $tests https://raw.githubusercontent.com/hubverse-org/hub-dash-site-builder/refs/heads/main/tests/run.sh
