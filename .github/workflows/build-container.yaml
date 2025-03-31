@@ -33,7 +33,7 @@ jobs:
     permissions: read-all
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.meta.outputs.tags }}
+      tags: ${{ steps.meta.outputs.tags }}
       labels: ${{ steps.meta.outputs.labels }}
     steps:
       - id: checkout
@@ -59,6 +59,8 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=ref,event=branch
+          flavor: |
+            latest=true
       - id: name-artifact
         env:
           REPO: ${{ github.repository }}
