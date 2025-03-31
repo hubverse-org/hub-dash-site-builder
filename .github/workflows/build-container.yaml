@@ -121,7 +121,7 @@ jobs:
     needs: [build-image]
     name: "Publish Image"
     runs-on: ubuntu-latest
-    if: ${{ fromJSON(env.PUBLISH) }}
+    if: ${{ github.event_name == 'push' && startsWith(github.event.push.ref, 'refs/tag') || (github.event.workflow_dispatch.ref == '/refs/head/main' && inputs.publish) }}
     permissions:
       contents: read
       packages: write
