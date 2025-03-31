@@ -60,8 +60,8 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=ref,event=branch
-          flavor: |
-            latest=true
+          # flavor: |
+          #   latest=true
       - id: name-artifact
         env:
           REPO: ${{ github.repository }}
@@ -71,6 +71,7 @@ jobs:
         run: |
           echo $TAG
           echo $LABEL
+          # This allows us to parse the case when there are multiple tags. 
           tag=$(echo $TAG | sed -e "s+[^:]*[:]\([^ ]*\).*+\1+")
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "name=tag-$tag" >> "$GITHUB_OUTPUT"
