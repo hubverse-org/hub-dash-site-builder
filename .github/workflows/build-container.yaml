@@ -14,12 +14,10 @@ on:
       - static/**
       - Dockerfile
       - entrypoint.sh
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
-      tag:
-        required: false
-        type: string
-        default: ghcr.io/hubverse-org/hub-dash-site-deployer:test
       publish:
         required: true
         type: boolean
@@ -28,7 +26,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  TAG: ghcr.io/${{ github.repository }}:${{ github.event_name == 'pull_request' && format('pr-{0}', fromJSON(github.event.pull_request.number)) || (inputs.tag || 'latest') }}
   PUBLISH: ${{ github.event_name == 'release' || (github.event.workflow_dispatch.ref == '/refs/head/main' && inputs.publish) }}
 
 jobs:
@@ -36,7 +33,7 @@ jobs:
     permissions: read-all
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
+      tag: ${{ steps.meta.outputs.tags }}
       labels: ${{ steps.meta.outputs.labels }}
     steps:
       - id: checkout
@@ -58,22 +55,21 @@ jobs:
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 #v5.7.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=tag
+          type=ref,event=pr
+          type=raw,event=branch
       - id: name-artifact
         env:
           REPO: ${{ github.repository }}
           RELEASE: ${{ github.event_name == 'release' }}
-          TAG: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
+          TAG: ${{ steps.meta.outputs.tags }}
           LABEL: ${{ steps.meta.outputs.labels }}
         run: |
           echo $TAG
           echo $LABEL
-          exit 1
-          if [ -z "$RELEASE" ]; then
-            echo "name=tag-release" >> "$GITHUB_OUTPUT"
-          else
-            tag=$(echo $TAG | sed -e "s+.*\:++")
-            echo "name=tag-$tag" >> "$GITHUB_OUTPUT"
-          fi
+          tag="${TAG/*:/}"
+          echo "name=tag-$tag" >> "$GITHUB_OUTPUT"
         shell: bash {0}
       - id: build
         name: Build and export
@@ -81,12 +77,12 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
+          tags: ${{ steps.meta.outputs.tags }}
           outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
       - id: test
         name: Test image
         run: |
-          tag=${TAG/*:/}
+          tag="${TAG/*:/}"
           docker load --input /tmp/hub-dash-site-deployer.tar
           bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${tag}" reichlab/flusight-dashboard
       - id: upload
@@ -94,7 +90,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           retention-days: 1
-          name: ${{ steps.name-artifact.outputs.name }}
+          name: tag-${{ steps.meta.outputs.tags }}
           path: /tmp/hub-dash-site-deployer.tar
 
   test:
@@ -124,7 +120,7 @@ jobs:
     needs: [build-image]
     name: "Publish Image"
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ false && github.event_name != 'pull_request' }}
     permissions:
       contents: read
       packages: write
