@@ -93,7 +93,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           retention-days: 1
-          name: tag-${{ steps.meta.outputs.tags }}
+          name: ${{ steps.name-artifact.outputs.name }}
           path: /tmp/hub-dash-site-deployer.tar
 
   test:
@@ -143,11 +143,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - id: meta
-        name: Extract metadata (tags, labels) for Docker
-        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 #v5.7.0
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - id: load-image
         run: |
           path=$(ls artifacts/*/*)
@@ -159,7 +154,7 @@ jobs:
         with:
           tags: ${{ needs.build-image.outputs.tags }}
           push: ${{ fromJSON(env.PUBLISH) }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ needs.build-image.outputs.labels }}
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
