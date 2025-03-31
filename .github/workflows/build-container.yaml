@@ -69,6 +69,7 @@ jobs:
           echo $TAG
           echo $LABEL
           tag="${TAG/*:/}"
+          echo $tag
           echo "name=tag-$tag" >> "$GITHUB_OUTPUT"
         shell: bash {0}
       - id: build
@@ -81,6 +82,8 @@ jobs:
           outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
       - id: test
         name: Test image
+        env:
+          TAG: ${{ steps.meta.outputs.tags }}
         run: |
           tag="${TAG/*:/}"
           docker load --input /tmp/hub-dash-site-deployer.tar
