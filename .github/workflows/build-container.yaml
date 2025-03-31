@@ -1,9 +1,6 @@
 name: Create, Test, and Publish Docker Image
 
-# Configures this workflow to run every time a change is pushed to the branch called `release`.
 on:
-  release:
-    types: [published]
   pull_request:
     branches: [main]
   push:
