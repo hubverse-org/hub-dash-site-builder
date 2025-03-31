@@ -54,7 +54,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        if: ${{ env.PUBLISH }}
         name: Extract metadata (tags, labels) for Docker
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 #v5.7.0
         with:
@@ -64,7 +63,11 @@ jobs:
           REPO: ${{ github.repository }}
           RELEASE: ${{ github.event_name == 'release' }}
           TAG: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
+          LABEL: ${{ steps.meta.outputs.labels }}
         run: |
+          echo $TAG
+          echo $LABEL
+          exit 1
           if [ -z "$RELEASE" ]; then
             echo "name=tag-release" >> "$GITHUB_OUTPUT"
           else
