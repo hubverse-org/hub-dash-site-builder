@@ -1,9 +1,6 @@
 name: Create, Test, and Publish Docker Image
 
-# Configures this workflow to run every time a change is pushed to the branch called `release`.
 on:
-  release:
-    types: [published]
   pull_request:
     branches: [main]
   push:
@@ -14,12 +11,10 @@ on:
       - static/**
       - Dockerfile
       - entrypoint.sh
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
-      tag:
-        required: false
-        type: string
-        default: ghcr.io/hubverse-org/hub-dash-site-deployer:test
       publish:
         required: true
         type: boolean
@@ -28,16 +23,16 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  TAG: ghcr.io/${{ github.repository }}:${{ github.event_name == 'pull_request' && format('pr-{0}', fromJSON(github.event.pull_request.number)) || (inputs.tag || 'latest') }}
-  PUBLISH: ${{ github.event_name == 'release' || (github.event.workflow_dispatch.ref == '/refs/head/main' && inputs.publish) }}
+  PUBLISH: ${{ github.event_name == 'push' && startsWith(github.event.push.ref, 'refs/tag') || (github.event.workflow_dispatch.ref == '/refs/head/main' && inputs.publish) }}
 
 jobs:
   build-image:
     permissions: read-all
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
+      tags: ${{ steps.meta.outputs.tags }}
       labels: ${{ steps.meta.outputs.labels }}
+      test-tag: ${{ steps.name-artifact.outputs.tag }}
     steps:
       - id: checkout
         name: Checkout
@@ -54,23 +49,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - id: meta
-        if: ${{ env.PUBLISH }}
         name: Extract metadata (tags, labels) for Docker
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 #v5.7.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=tag
+            type=ref,event=pr
+            type=ref,event=branch
       - id: name-artifact
         env:
           REPO: ${{ github.repository }}
-          RELEASE: ${{ github.event_name == 'release' }}
-          TAG: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
+          TAG: ${{ steps.meta.outputs.tags }}
+          LABEL: ${{ steps.meta.outputs.labels }}
         run: |
-          if [ -z "$RELEASE" ]; then
-            echo "name=tag-release" >> "$GITHUB_OUTPUT"
-          else
-            tag=$(echo $TAG | sed -e "s+.*\:++")
-            echo "name=tag-$tag" >> "$GITHUB_OUTPUT"
-          fi
+          echo $TAG
+          echo $LABEL
+          # This allows us to parse the case when there are multiple tags. 
+          tag=$(echo $TAG | sed -e "s+[^:]*[:]\([^ ]*\).*+\1+")
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "name=tag-$tag" >> "$GITHUB_OUTPUT"
         shell: bash {0}
       - id: build
         name: Build and export
@@ -78,14 +76,15 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ steps.meta.outputs.tags || inputs.tag || env.TAG }}
+          tags: ${{ steps.meta.outputs.tags }}
           outputs: type=docker,dest=/tmp/hub-dash-site-deployer.tar
       - id: test
         name: Test image
+        env:
+          TAG: ${{ steps.name-artifact.outputs.tag }}
         run: |
-          tag=${TAG/*:/}
           docker load --input /tmp/hub-dash-site-deployer.tar
-          bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${tag}" reichlab/flusight-dashboard
+          bash tests/run.sh "ghcr.io/hubverse-org/hub-dash-site-builder:${TAG}" reichlab/flusight-dashboard
       - id: upload
         name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -109,19 +108,20 @@ jobs:
           pattern: tag*
       - id: test-image
         name: Test image against tests on main
+        env:
+          TAG: ${{ needs.build-image.outputs.test-tag }}
         run: |
-          tag=$(ls artifacts/)
-          path=$(ls artifacts/$tag/*)
+          path=$(ls artifacts/*/*)
           docker load --input "$path"
           tests=$(mktemp)
           curl -o $tests https://raw.githubusercontent.com/hubverse-org/hub-dash-site-builder/refs/heads/main/tests/run.sh
-          bash ${tests} "ghcr.io/hubverse-org/hub-dash-site-builder:${tag}" reichlab/flusight-dashboard
+          bash ${tests} "ghcr.io/hubverse-org/hub-dash-site-builder:${TAG}" reichlab/flusight-dashboard
         shell: bash
   publish:
     needs: [build-image]
     name: "Publish Image"
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ fromJSON(env.PUBLISH) }}
     permissions:
       contents: read
       packages: write
@@ -141,11 +141,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - id: meta
-        name: Extract metadata (tags, labels) for Docker
-        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 #v5.7.0
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       - id: load-image
         run: |
           path=$(ls artifacts/*/*)
@@ -156,13 +151,13 @@ jobs:
         uses: docker/build-push-action@471d1dc4e07e5cdedd4c2171150001c434f0b7a4 #v6.15.0
         with:
           tags: ${{ needs.build-image.outputs.tags }}
-          push: ${{ fromJSON(env.PUBLISH) }}
-          labels: ${{ steps.meta.outputs.labels }}
+          push: true
+          labels: ${{ needs.build-image.outputs.labels }}
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: ${{ fromJSON(env.PUBLISH) }}
+          push-to-registry: true
 
 
