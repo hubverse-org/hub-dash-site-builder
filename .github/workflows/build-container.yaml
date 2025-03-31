@@ -58,7 +58,7 @@ jobs:
           tags: |
             type=ref,event=tag
             type=ref,event=pr
-            type=raw,event=branch
+            type=ref,event=branch
       - id: name-artifact
         env:
           REPO: ${{ github.repository }}
