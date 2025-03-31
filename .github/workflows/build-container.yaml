@@ -96,7 +96,7 @@ jobs:
 
   test:
     needs: [build-image]
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.workflow_dispatch.ref != '/refs/head/main') }}
     name: "Test built image against published test suite (may fail)"
     runs-on: ubuntu-latest
     permissions: read-all
