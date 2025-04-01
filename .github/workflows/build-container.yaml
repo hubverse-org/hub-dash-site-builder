@@ -23,7 +23,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  PUBLISH: ${{ github.event_name == 'push' && startsWith(github.event.push.ref, 'refs/tags') || (github.event.workflow_dispatch.ref == 'refs/heads/main' && inputs.publish) }}
+  PUBLISH: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') || (github.event.name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.publish) }}
 
 jobs:
   build-image:
@@ -95,7 +95,7 @@ jobs:
 
   test:
     needs: [build-image]
-    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.workflow_dispatch.ref != 'refs/head/main') }}
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main') }}
     name: "Test built image against published test suite (may fail)"
     runs-on: ubuntu-latest
     permissions: read-all
@@ -121,7 +121,7 @@ jobs:
     needs: [build-image]
     name: "Publish Image"
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && startsWith(github.event.push.ref, 'refs/tags') || (github.event.workflow_dispatch.ref == 'refs/heads/main' && inputs.publish) }}
+    if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') || (github.event.name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.publish) }}
     permissions:
       contents: read
       packages: write
