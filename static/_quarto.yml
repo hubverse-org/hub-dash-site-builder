@@ -27,7 +27,7 @@ website:
   page-footer:
     right:
       - text: "Built with the Hubverse dashboard"
-        href: https://hubverse.io/en/latest/user-guide/dashboards.html
+        href: https://docs.hubverse.io/en/latest/user-guide/dashboards.html
 format:
   html:
     from: markdown+emoji
