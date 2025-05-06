@@ -26,7 +26,13 @@ dashboard repository. You need to then copy the contents of `_site/` into the
 
 ## Usage
 
-To get help, you can run the container with no arguments.
+To get help, you can run the container with the `--help` argument, which will
+print the usage and display [examples](examples.md).
+
+> [!NOTE]
+>
+> The default working directory of the image is in `/site`. This is where
+> we expect the dashboard source and subfolders to live.
 
 The general workflow can be run like so:
 
