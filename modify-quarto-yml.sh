@@ -133,7 +133,7 @@ if [[ -z "${FORECAST}" ]]; then
   # [FORECAST] -------------------------------------------------
   yq -i 'with(.website.navbar.left; . |= filter(.href != "forecast.qmd"))' "${YML}"
 elif [[ "${FORECAST}" != "true" ]]; then
-  # otherwise, include the JavaScript
+  # otherwise, include the data (if it exists)
   yq -i '.resources += "/resources/forecasts"' "${YML}"
 fi
 if [[ -z "${EVAL}" ]]; then
@@ -141,6 +141,6 @@ if [[ -z "${EVAL}" ]]; then
   # [EVAL] -----------------------------------------------------
   yq -i 'with(.website.navbar.left; . |= filter(.href != "eval.qmd"))' "${YML}"
 elif [[ "${EVAL}" != "true" ]]; then
-  # otherwise, include the JavaScript
+  # otherwise, include the data (if it exists)
   yq -i '.resources += "/resources/evals"' "${YML}"
 fi
