@@ -1,4 +1,4 @@
-import App from 'https://cdn.jsdelivr.net/gh/reichlab/predtimechart@3.0.0/dist/predtimechart.bundle.js';
+import App from 'https://cdn.jsdelivr.net/gh/reichlab/predtimechart@v3/dist/predtimechart.bundle.js';
 document.predtimechart = App;  // for debugging
 
 function replace_chars(the_string) {
