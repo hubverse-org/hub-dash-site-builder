@@ -31,8 +31,7 @@ print the usage and display [examples](examples.md).
 
 > [!NOTE]
 >
-> The default working directory of the image is in `/site`. This is where
-> we expect the dashboard source and subfolders to live.
+> The default working directory inside the container, set in the image using `WORKDIR`, is `/site`. This is where we expect the dashboard source and its subfolders to live, and where all commands are executed unless a different working directory is specified
 
 The general workflow can be run like so:
 
