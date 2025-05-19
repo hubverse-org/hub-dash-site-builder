@@ -6,6 +6,9 @@ function replace_chars(the_string) {
     return the_string.replace(/[^a-zA-Z0-9-_]/g, '-');
 }
 
+// NOTE: if this value is not replaced with a URL
+//       or a path that ends with a slash, then
+//       this script will throw a 404 error
 const root = "{ROOT}";
 
 function _fetchData(isForecast, targetKey, taskIDs, referenceDate) {
