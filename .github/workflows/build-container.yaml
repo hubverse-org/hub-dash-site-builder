@@ -102,7 +102,7 @@ jobs:
     steps:
       - id: check-artifacts
         name: Fetch image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
           pattern: tag*
@@ -130,7 +130,7 @@ jobs:
     steps:
       - id: check-artifacts
         name: Fetch Image
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: artifacts
           pattern: tag*
